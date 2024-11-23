@@ -1,3 +1,46 @@
+# Sistema de Gerenciamento de Heróis - The Boys 🦸‍♂️
+
+## Equipe 👥
+- José Waldo
+- Davi Pacini
+- Aleff M.
+- Guilherme Miranda
+- Bruno Monteiro
+- Luisa Z.
+
+## Descrição
+Sistema desenvolvido para a disciplina de Paradigmas de Linguagens de Programação, implementando um gerenciador de heróis inspirado na série The Boys. O sistema permite cadastrar, gerenciar e simular batalhas entre heróis.
+
+## Tecnologias Utilizadas 🛠️
+- Backend: Go (Golang)
+- Frontend: HTML, CSS, JavaScript
+- Banco de Dados: PostgreSQL
+- Bibliotecas:
+  - gorilla/mux
+  - gorilla/handlers
+  - lib/pq
+## Funcionalidades Principais ⚡
+- Cadastro e gerenciamento de heróis
+- Registro de missões e crimes
+- Simulador de batalhas entre heróis
+- Sistema de poderes e habilidades
+- Controle de status e popularidade
+
+## Estrutura do Projeto 📁
+```PLP_Backend/
+├── classes/         # Estruturas e lógica de negócio
+├── controllers/     # Controladores da API
+├── database/        # Configuração do banco de dados
+└── main.go         # Arquivo principal
+
+PLP_Frontend/
+├── images/         # Imagens dos heróis
+├── missoes/        # Interface de missões
+├── simulador/      # Interface do simulador
+└── index.html      # Página principal
+```
+
+
 # Documentação da API de Heróis
 ## Endpoints Disponíveis
 ### 1. Listar Todos os Heróis
