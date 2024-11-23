@@ -3,7 +3,6 @@ package controllers
 import (
 	"PLP_Backend/classes"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -39,11 +38,6 @@ func ConsultaMissaoHeroi(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListarTodasMissoesHandler(w http.ResponseWriter, r *http.Request) {
-	// Adicionar headers CORS específicos
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
 	// Se for uma requisição OPTIONS, retornar imediatamente
 	if r.Method == "OPTIONS" {
 		w.WriteHeader(http.StatusOK)
@@ -73,9 +67,6 @@ func ListarTodasMissoesHandler(w http.ResponseWriter, r *http.Request) {
 func ConsultaMissaoPorId(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	idMissao := vars["id"]
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	missao, err := classes.ConsultaMissaoPorId(idMissao)
 	if err != nil {
@@ -107,24 +98,12 @@ func AtualizarMissao(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeletarMissaoHandler(w http.ResponseWriter, r *http.Request) {
-	// Configurar headers CORS
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "DELETE, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
-	// Se for uma requisição OPTIONS, retornar imediatamente
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
-	// Pegar o ID da missão dos parâmetros da URL
 	vars := mux.Vars(r)
 	idMissao := vars["id"]
 
 	err := classes.DeletarMissao(idMissao)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Erro ao deletar missão: %v", err), http.StatusInternalServerError)
+		http.Error(w, "Erro ao deletar missão", http.StatusInternalServerError)
 		return
 	}
 

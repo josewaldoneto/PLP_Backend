@@ -4,6 +4,8 @@ import (
 	"PLP_Backend/classes"
 	"encoding/json"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 // Controller para consultar crimes por heroi e severidade
@@ -101,8 +103,8 @@ func ConsultaCrimesSeveridade(w http.ResponseWriter, r *http.Request) {
 
 func CtrlDeleteCrime(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
-		IDCrime int `json:"id_crime"`
-		IDHeroi int `json:"id_heroi"`
+		IDCrime   int    `json:"id_crime"`
+		NomeHeroi string `json:"nome_heroi"`
 	}
 
 	err := json.NewDecoder(r.Body).Decode(&requestData)
@@ -112,13 +114,34 @@ func CtrlDeleteCrime(w http.ResponseWriter, r *http.Request) {
 	}
 
 	idCrime := requestData.IDCrime
+	nomeHeroi := requestData.NomeHeroi
 
 	// Configura o cabeçalho de resposta
 	w.Header().Set("Content-Type", "application/json")
 
-	err = classes.DeleteCrime(idCrime, requestData.IDHeroi)
+	err = classes.DeleteCrime(idCrime, nomeHeroi)
 	if err != nil {
 		http.Error(w, "Erro ao deletar crime", http.StatusNotFound)
 		return
 	}
+}
+
+func CtrlAtualizarCrime(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	idOcorrencia := vars["id"]
+
+	var crimes classes.Crimes
+	err := json.NewDecoder(r.Body).Decode(&crimes)
+	if err != nil {
+		http.Error(w, "Payload inválido", http.StatusBadRequest)
+		return
+	}
+
+	err = classes.AtualizarCrime(idOcorrencia, crimes)
+	if err != nil {
+		http.Error(w, "Erro ao atualizar missão", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }

@@ -28,18 +28,22 @@ func Loading() {
 	r.HandleFunc("/heroistatus", controllers.MostraPorStatus).Methods("POST")
 	r.HandleFunc("/poderes", controllers.MostraTodosPoderes).Methods("GET")
 	r.HandleFunc("/editar", controllers.EditarHeroiHandler).Methods("POST")
+
 	// Rotas para os crimes
 	r.HandleFunc("/heroieseveridadecrime", controllers.ConsultaCrimesHS).Methods("POST")
 	r.HandleFunc("/heroicrime", controllers.ConsultaCrimesHeroi).Methods("POST")
 	r.HandleFunc("/severidadecrime", controllers.ConsultaCrimesSeveridade).Methods("POST")
-	r.HandleFunc("/deletecrime", controllers.CtrlDeleteCrime).Methods("DELETE")
+	r.HandleFunc("/deletecrime/", controllers.CtrlDeleteCrime).Methods("DELETE")
+	r.HandleFunc("/editacrime/{id}", controllers.CtrlAtualizarCrime).Methods("POST")
+
 	// Rotas para as missoes
 	r.HandleFunc("/missao", controllers.ConsultaMissaoHeroi).Methods("POST")
 	r.HandleFunc("/missoes", controllers.ListarTodasMissoesHandler).Methods("GET")
+	r.HandleFunc("/missao/{id}", controllers.ConsultaMissaoPorId).Methods("GET")
+	r.HandleFunc("/missao/{id}", controllers.AtualizarMissao).Methods("POST")
 	r.HandleFunc("/missao/{id}", controllers.DeletarMissaoHandler).Methods("DELETE")
-	// r.HandleFunc("/missao/{id}", controllers.EditarMissaoHandler).Methods("PUT")
 
-	r.HandleFunc("/simularbatalha", controllers.SimularBatalhaController).Methods("GET")
+	r.HandleFunc("/simularbatalha", controllers.SimularBatalhaController).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(":8080", handlers.CORS(headers, methods, origins, credentials)(r)))
 }

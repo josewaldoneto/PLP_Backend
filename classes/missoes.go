@@ -17,35 +17,34 @@ type Missoes struct {
 	Recompensa      string `json:"recompensa"`
 }
 
-// Função para Consultar Missões por Herói
 func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 	db := database.ConectaDB()
 	defer db.Close()
 
 	// Query atualizada para incluir todos os heróis da missão
-	query := `
-		SELECT
-			m.nome_missao, 
-			m.descricao, 
-			m.nivel_dificuldade, 
-			m.resultado, 
-			m.recompensa, 
-			h.nome_heroi
-		FROM
-			missoes m
-		JOIN
-			herois_missoes hm ON m.id_missao = hm.id_missao
-		JOIN
-			herois h ON hm.id_heroi = h.id_heroi
-		WHERE
-			m.id_missao IN (
-				SELECT DISTINCT hm.id_missao 
-				FROM herois_missoes hm
-				JOIN herois h ON hm.id_heroi = h.id_heroi
-				WHERE h.nome_heroi = $1
-			)
-		ORDER BY m.nivel_dificuldade ASC;
-	`
+	query :=
+		`SELECT
+            m.nome_missao, 
+            m.descricao, 
+            m.nivel_dificuldade, 
+            m.resultado, 
+            m.recompensa, 
+            h.nome_heroi
+        FROM
+            missoes m
+        JOIN
+            herois_missoes hm ON m.id_missao = hm.id_missao
+        JOIN
+            herois h ON hm.id_heroi = h.id_heroi
+        WHERE
+            m.id_missao IN (
+                SELECT DISTINCT hm.id_missao 
+                FROM herois_missoes hm
+                JOIN herois h ON hm.id_heroi = h.id_heroi
+                WHERE h.nome_heroi = $1
+            )
+        AND m.esconder_missao = false
+        ORDER BY m.nivel_dificuldade ASC;`
 
 	rows, err := db.Query(query, nomeHeroi)
 	if err != nil {
@@ -80,8 +79,8 @@ func ConsultaMissoesPorHeroi(nomeHeroi string) ([]Missoes, error) {
 func ListarTodasMissoes() ([]Missoes, error) {
 	db := database.ConectaDB()
 	defer db.Close()
-	query := `
-        SELECT DISTINCT
+	query :=
+		`SELECT DISTINCT
             m.id_missao,
             m.nome_missao, 
             m.descricao, 
@@ -95,10 +94,11 @@ func ListarTodasMissoes() ([]Missoes, error) {
             herois_missoes hm ON m.id_missao = hm.id_missao
         LEFT JOIN
             herois h ON hm.id_heroi = h.id_heroi
+        WHERE
+            m.esconder_missao = false
         GROUP BY
             m.id_missao, m.nome_missao, m.descricao, m.nivel_dificuldade, m.resultado, m.recompensa
-        ORDER BY m.nivel_dificuldade ASC;
-    `
+        ORDER BY m.nivel_dificuldade ASC;`
 
 	rows, err := db.Query(query)
 	if err != nil {
@@ -143,6 +143,7 @@ func ConsultaMissaoPorId(idMissao string) (Missoes, error) {
         LEFT JOIN herois_missoes hm ON m.id_missao = hm.id_missao
         LEFT JOIN herois h ON hm.id_heroi = h.id_heroi
         WHERE m.id_missao = $1
+        AND m.esconder_missao = false
         GROUP BY m.id_missao, m.nome_missao, m.descricao, m.nivel_dificuldade, m.resultado, m.recompensa
     `
 
@@ -202,11 +203,10 @@ func DeletarMissao(idMissao string) error {
 	db := database.ConectaDB()
 	defer db.Close()
 
-	query := `
-        UPDATE missoes 
-        SET esconder = true 
-        WHERE id_missao = $1
-    `
+	query :=
+		`UPDATE missoes 
+        SET esconder_missao = true 
+        WHERE id_missao = $1`
 
 	result, err := db.Exec(query, idMissao)
 	if err != nil {

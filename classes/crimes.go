@@ -8,8 +8,7 @@ import (
 
 // Struct de Crimes para o rows
 type Crimes struct {
-	//Herois
-
+	IDCrime         int    `json:"id_crime"`
 	NomeHeroi       string `json:"nome_heroi"`
 	NomeCrime       string `json:"nome_crime"`
 	Severidade      string `json:"severidade"`
@@ -142,7 +141,7 @@ func ConsultaCrimesPorSeveridade(severidadeMinima int, severidadeMaxima int) ([]
 	// Consulta para buscar crimes com base na severidade
 	query := `
 		SELECT 
-			c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento, h.nome_heroi
+			c.id_crime, c.nome_crime, c.severidade, hc.data_crime, hc.descricao_evento, h.nome_heroi
 		FROM 
 			crimes c
 		JOIN 
@@ -170,6 +169,7 @@ func ConsultaCrimesPorSeveridade(severidadeMinima int, severidadeMaxima int) ([]
 	for rows.Next() {
 		var crime Crimes
 		err := rows.Scan(
+			&crime.IDCrime,
 			&crime.NomeCrime,
 			&crime.Severidade,
 			&crime.DataCrime,
@@ -190,23 +190,56 @@ func ConsultaCrimesPorSeveridade(severidadeMinima int, severidadeMaxima int) ([]
 	return crimes, nil
 }
 
-func DeleteCrime(id_crime int, id_heroi int) error {
+func DeleteCrime(id_crime int, nome_heroi string) error {
 	db := database.ConectaDB()
 	defer db.Close() // Garantir que o banco de dados seja fechado após o uso
 
 	// Consulta para deletar crimes com base no id do herói e do crime
 	query := `
-		UPDATE herois_crimes
-		SET esconder = true
-		WHERE id_crime = $1 AND id_heroi = $2;
-	`
+        UPDATE herois_crimes hc
+        SET esconder = true
+        FROM herois h
+        WHERE hc.id_crime = $1 
+        AND h.nome_heroi = $2
+        AND hc.id_heroi = h.id_heroi;`
 
 	// Executa a consulta
-	_, err := db.Exec(query, id_crime, id_heroi)
+	_, err := db.Exec(query, id_crime, nome_heroi)
 	if err != nil {
 		log.Fatal(err)
 		return err
 	}
 
 	return nil
+}
+
+func AtualizarCrime(idCrime string, crime Crimes) error {
+	db := database.ConectaDB()
+	defer db.Close()
+
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	// Atualizar dados básicos da missão
+	query :=
+		`UPDATE herois_crimes
+        SET id_crime = $1, descricao_evento = $2, data_crime = $3, id_heroi = $4
+        WHERE id_ocorrencia = $5`
+
+	_, err = tx.Exec(query,
+		crime.NomeCrime,
+		crime.DescricaoEvento,
+		crime.DataCrime,
+		crime.NomeHeroi,
+		idCrime,
+	)
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	return tx.Commit()
 }
