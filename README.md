@@ -180,7 +180,22 @@ PLP_Frontend/
     "nome_heroi": "string"
 }
 ```
-### 13. Simular Batalha entre Heróis
+### 13. Listar Todas as Missões
+- **Endpoint:** `/missoes`
+- **Método:** GET
+- **Descrição:** Retorna todas as missões cadastradas no sistema
+- **Não requer corpo na requisição**
+### 14. Consultar Missão por ID
+- **Endpoint:** `/missao/{id}`
+- **Método:** GET
+- **Descrição:** Retorna detalhes de uma missão específica
+- **Não requer corpo na requisição**
+### 15. Deletar Missão
+- **Endpoint:** `/missao/{id}`
+- **Método:** DELETE
+- **Descrição:** Remove uma missão do sistema
+- **Não requer corpo na requisição**
+### 16. Simular Batalha entre Heróis
 - **Endpoint:** `/simularbatalha`
 - **Método:** POST
 - **Descrição:** Simula uma batalha entre dois heróis, considerando força, popularidade e fatores aleatórios
