@@ -1,6 +1,6 @@
 -- Inserir HEROIS no banco de dados
 
-INSERT INTO Herois (nome_heroi, nome_real, sexo, altura, local_nasc, data_nasc, peso, popularidade, forca, status_atividade)
+INSERT INTO Herois (nome_heroi, nome_real, sexo, altura, local_nascimento, data_nascimento, peso, popularidade, forca, status_atividade)
 VALUES
 ('Homelander', 'John', 'Masculino', 1.91, 'Estados Unidos', '1982-06-10', 90.0, 95, 100, 'Ativo'),
 ('Starlight', 'Annie January', 'Feminino', 1.65, 'Estados Unidos', '1991-05-01', 55.0, 85, 75, 'Ativo'),
@@ -135,7 +135,7 @@ VALUES
 
 --inserir na tabela Heroi_Crime
 
-INSERT INTO Heroi_Crime (id_heroi, id_crime, data_crime, descricao_evento, esconder)
+INSERT INTO Herois_Crimes (id_heroi, id_crime, data_crime, descricao_evento, esconder)
 VALUES
 -- Homelander
 (1, 10, '2023-05-12', 'Ataque terrorista em um prédio civil', TRUE),
