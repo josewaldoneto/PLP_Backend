@@ -98,3 +98,27 @@ func ConsultaCrimesSeveridade(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
+
+func CtrlDeleteCrime(w http.ResponseWriter, r *http.Request) {
+	var requestData struct {
+		IDCrime int `json:"id_crime"`
+		IDHeroi int `json:"id_heroi"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&requestData)
+	if err != nil {
+		http.Error(w, "Invalid Request Payload", http.StatusBadRequest)
+		return
+	}
+
+	idCrime := requestData.IDCrime
+
+	// Configura o cabeçalho de resposta
+	w.Header().Set("Content-Type", "application/json")
+
+	err = classes.DeleteCrime(idCrime, requestData.IDHeroi)
+	if err != nil {
+		http.Error(w, "Erro ao deletar crime", http.StatusNotFound)
+		return
+	}
+}

@@ -32,6 +32,7 @@ func Loading() {
 	r.HandleFunc("/heroieseveridadecrime", controllers.ConsultaCrimesHS).Methods("POST")
 	r.HandleFunc("/heroicrime", controllers.ConsultaCrimesHeroi).Methods("POST")
 	r.HandleFunc("/severidadecrime", controllers.ConsultaCrimesSeveridade).Methods("POST")
+	r.HandleFunc("/deletecrime", controllers.CtrlDeleteCrime).Methods("DELETE")
 	// Rotas para as missoes
 	r.HandleFunc("/missao", controllers.ConsultaMissaoHeroi).Methods("POST")
 	r.HandleFunc("/missoes", controllers.ListarTodasMissoesHandler).Methods("GET")

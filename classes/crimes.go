@@ -9,6 +9,7 @@ import (
 // Struct de Crimes para o rows
 type Crimes struct {
 	//Herois
+
 	NomeHeroi       string `json:"nome_heroi"`
 	NomeCrime       string `json:"nome_crime"`
 	Severidade      string `json:"severidade"`
@@ -187,4 +188,25 @@ func ConsultaCrimesPorSeveridade(severidadeMinima int, severidadeMaxima int) ([]
 	}
 
 	return crimes, nil
+}
+
+func DeleteCrime(id_crime int, id_heroi int) error {
+	db := database.ConectaDB()
+	defer db.Close() // Garantir que o banco de dados seja fechado após o uso
+
+	// Consulta para deletar crimes com base no id do herói e do crime
+	query := `
+		UPDATE herois_crimes
+		SET esconder = true
+		WHERE id_crime = $1 AND id_heroi = $2;
+	`
+
+	// Executa a consulta
+	_, err := db.Exec(query, id_crime, id_heroi)
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
 }
